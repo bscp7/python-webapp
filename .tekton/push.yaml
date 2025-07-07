@@ -11,9 +11,9 @@ metadata:
 spec:
   params:
   - name: repo_url
-    value: '{{ repo_url }}'
+    value: https://github.com/bscp7/python-webapp.git
   - name: revision
-    value: '{{ revision }}'
+    value: main
   pipelineSpec:
     params:
     - name: repo_url
@@ -54,4 +54,4 @@ spec:
             storage: 1Gi
   - name: basic-auth
     secret:
-      secretName: '{{ git_auth_secret }}'
+      secretName: github-auth-secret

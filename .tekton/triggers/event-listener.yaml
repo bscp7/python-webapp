@@ -1,0 +1,12 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: odo-event-listener
+spec:
+  triggers:
+    - name: odo-trigger
+      bindings:
+        - ref: odo-trigger-binding
+      template:
+        ref: odo-trigger-template

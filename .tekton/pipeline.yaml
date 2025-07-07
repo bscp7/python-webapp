@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: odo-deploy-pipeline
+spec:
+  tasks:
+    - name: build-images
+      taskRef:
+        name: odo-build-images
+    - name: deploy
+      runAfter:
+        - build-images
+      taskRef:
+        name: odo-deploy

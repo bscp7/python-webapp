@@ -1,0 +1,10 @@
+# this is for manual test trigger only
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: odo-deploy-pipeline-run
+spec:
+  pipelineRef:
+    name: odo-deploy-pipeline
+  workspaces: []

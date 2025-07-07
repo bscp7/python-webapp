@@ -1,0 +1,14 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: odo-trigger-template
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: odo-deploy-run-
+      spec:
+        pipelineRef:
+          name: odo-deploy-pipeline
