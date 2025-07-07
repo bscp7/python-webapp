@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: my-python
-          image: python-image:latest
+          image: docker.io/bhaveshscp/python-image:latest
           ports:
             - name: http
               containerPort: 8081
@@ -23,6 +23,8 @@ spec:
             requests:
               memory: "50Mi"
               cpu: "10m"
+      imagePullSecrets:
+        - name: docker
 ---
 kind: Service
 apiVersion: v1

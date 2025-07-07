@@ -24,7 +24,7 @@ parent:
 components:
   - name: image-build
     image:
-      imageName: python-image:latest
+      imageName: docker.io/bhaveshscp/python-image:latest
       dockerfile:
         uri: docker/Dockerfile
         buildContext: .
