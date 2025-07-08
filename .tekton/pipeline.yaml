@@ -1,14 +1,51 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: odo-deploy-pipeline
+  name: ci-gitops-pipeline
 spec:
+  params:
+    - name: repo-url
+    - name: image-url
+    - name: gitops-repo-url
+    - name: app-name
+    - name: gitops-branch
+  workspaces:
+    - name: shared-workspace
   tasks:
-    - name: build-images
+    - name: clone-source
       taskRef:
-        name: odo-build-images
-    - name: deploy
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.repo-url)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: build-image
       runAfter:
-        - build-images
+        - clone-source
       taskRef:
-        name: odo-deploy
+        name: buildah
+      params:
+        - name: IMAGE
+          value: $(params.image-url)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: patch-gitops
+      taskref:
+        name: update-kustomize-image
+      runAfter:
+        - build-image
+      params:
+        - name: gitops-repo-url
+          value: $(params.gitops-repo-url)
+        - name: image
+          value: $(params.image-url)
+        - name: app-name
+          value: $(params.app-name)
+        - name: branch
+          value: $(params.gitops-branch)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
