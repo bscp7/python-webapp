@@ -9,32 +9,34 @@ spec:
     - name: image
     - name: app-name
     - name: branch
-  # resources:
-  #   inputs:
-  #     resources:
-  #       - name: workspace
-  #         type: git
-  #         targetPath: target-workspace
-  #   outputs:
-  #     resources:
-  #       - name: build-sources
-  #         type: ubuntu
   workspaces:
-    - name: output
+    - name: source
   steps:
     - name: update
-      image: alpine/git
+      image: docker.io/alpine/git:latest
       script: |
         set -e
-        cd $(workspaces.output.path)
+        cd $(workspaces.source.path)
         git clone --branch $(params.branch) $(params.gitops-repo-url) gitops
         cd gitops
 
+        echo "kustomization.yaml before:"
+        echo "--------------------------"
+        cat kustomization.yaml
+
         echo "updating image in kustomization.yaml"
         sed -i "s|newTag:.*|newTag: $(echo $(params.image) | cut -d: -f2)|" kustomization.yaml
+        
+        echo "kustomization.yaml after:"
+        echo "--------------------------"
+        cat kustomization.yaml
 
         git config user.name "Bhavesh Patel"
         git config user.email "tekton@example.com"
-        git add kustomization.yaml
-        git commit -m "update image to $(params.image)"
-        git push origin $(params.branch)
+        if git diff --quiet; then
+          echo "No changes to commit."
+        else
+          git add kustomization.yaml
+          git commit -m "update image to $(params.image)"
+          git push origin $(params.branch)
+        fi

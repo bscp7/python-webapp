@@ -13,7 +13,7 @@ spec:
         app: python-app
     spec:
       containers:
-        - name: my-python
+        - name: mywebapp
           image: docker.io/bhaveshscp/python-image:latest
           ports:
             - name: http
