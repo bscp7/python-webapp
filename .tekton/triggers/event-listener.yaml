@@ -2,11 +2,12 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: odo-event-listener
+  name: gitops-event-listener
 spec:
+  serviceAccountName: pipeline
   triggers:
-    - name: odo-trigger
+    - name: git-push-trigger
       bindings:
-        - ref: odo-trigger-binding
+        - ref: git-push-binding
       template:
-        ref: odo-trigger-template
+        ref: git-trigger-template
