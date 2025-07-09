@@ -1,4 +1,5 @@
 .secret.yaml
+.notes.md
 
 .odo/env
 .odo/odo-file-index.json
