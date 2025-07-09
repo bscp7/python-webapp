@@ -1,14 +1,40 @@
----
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: odo-trigger-template
+  name: git-trigger-template
 spec:
+  params:
+    - name: repo-url
+    - name: image-url
+    - name: gitops-repo-url
+    - name: app-name
+    - name: gitops-branch
   resourcetemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
       metadata:
-        generateName: odo-deploy-run-
+        generateName: ci-deploy-run-
       spec:
         pipelineRef:
-          name: odo-deploy-pipeline
+          name: ci-gitops-pipeline
+        params:
+          - name: repo-url
+            value: $(params.repo-url)
+          - name: image-url
+            value: $(params.image-url)
+          - name: gitops-repo-url
+            value: $(params.gitops-repo-url)
+          - name: app-name
+            value: $(params.app-name)
+          - name: gitops-branch
+            value: $(params.gitops-branch)
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              metadata:
+                name: shared-workspace-pvc
+              spec:
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 1Gi

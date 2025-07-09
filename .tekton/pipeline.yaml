@@ -28,12 +28,12 @@ spec:
         name: buildah
       params:
         - name: IMAGE
-          value: $(params.image-url)
+          value: $(params.image-url):$(tasks.clone-source.results.commit)
       workspaces:
         - name: source
           workspace: shared-workspace
     - name: patch-gitops
-      taskref:
+      taskRef:
         name: update-kustomize-image
       runAfter:
         - build-image
@@ -41,11 +41,19 @@ spec:
         - name: gitops-repo-url
           value: $(params.gitops-repo-url)
         - name: image
-          value: $(params.image-url)
+          value: $(params.image-url):$(tasks.clone-source.results.commit)
         - name: app-name
           value: $(params.app-name)
         - name: branch
           value: $(params.gitops-branch)
       workspaces:
         - name: output
+          workspace: shared-workspace
+    - name: deploy
+      taskRef:
+        name: kubectl-deploy
+      runAfter:
+        - patch-gitops
+      workspaces:
+        - name: source
           workspace: shared-workspace

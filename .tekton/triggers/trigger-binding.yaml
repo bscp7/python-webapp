@@ -2,8 +2,14 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
-  name: odo-trigger-binding
+  name: git-push-binding
 spec:
   params:
-    - name: git-repo-url
-      value: $(body.repository.url)
+    - name: repo-url
+      value: $(body.repository.clone_url)
+    - name: git-revision
+      value: $(body.head_commit.id)
+    - name: gitops-branch
+      value: $(body.ref)
+    - name: app-name
+      value: "mywebapp"
