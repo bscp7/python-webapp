@@ -6,4 +6,4 @@ resources:
 images:
   - name: python-image
     newName: docker.io/bhaveshscp/python-image
-    newTag: latest
+    newTag: 871c06095118ed3688ccb876e0b6c9c9028f3735
