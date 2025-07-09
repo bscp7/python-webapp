@@ -11,6 +11,7 @@ spec:
     - name: gitops-branch
   workspaces:
     - name: shared-workspace
+    - name: ssh-creds
   tasks:
     - name: clone-source
       taskRef:
@@ -21,6 +22,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-creds
     - name: build-image
       runAfter:
         - clone-source
@@ -47,8 +50,10 @@ spec:
         - name: branch
           value: $(params.gitops-branch)
       workspaces:
-        - name: output
+        - name: source
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-creds
     - name: deploy
       taskRef:
         name: kubectl-deploy
@@ -57,3 +62,5 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
+        - name: ssh-directory
+          workspace: ssh-creds

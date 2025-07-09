@@ -28,3 +28,6 @@ spec:
           resources:
             requests:
               storage: 1Gi
+    - name: ssh-creds
+      secret:
+        secretName: git-ssh-key

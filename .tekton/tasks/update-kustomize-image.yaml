@@ -11,14 +11,21 @@ spec:
     - name: branch
   workspaces:
     - name: source
+    - name: ssh-directory
   steps:
     - name: update
       image: docker.io/alpine/git:latest
       script: |
         set -e
+
+        mkdir -p ~/.ssh
+        cp $(workspaces.ssh-directory.path)/id_rsa ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
         cd $(workspaces.source.path)
         git clone --branch $(params.branch) $(params.gitops-repo-url) gitops
-        cd gitops
+        cd apps/manifests/overlays/prod
 
         echo "kustomization.yaml before:"
         echo "--------------------------"
@@ -31,8 +38,9 @@ spec:
         echo "--------------------------"
         cat kustomization.yaml
 
+        cd $(workspaces.source.path)
         git config user.name "Bhavesh Patel"
-        git config user.email "tekton@example.com"
+        git config user.email "bhavesh.scp@hotmail.com"
         if git diff --quiet; then
           echo "No changes to commit."
         else

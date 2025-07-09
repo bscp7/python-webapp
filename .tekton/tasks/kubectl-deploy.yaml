@@ -1,16 +1,20 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: kubectl-deploy
 spec:
   workspaces:
     - name: source
+    - name: ssh-directory
   steps:
     - name: deploy
       image: bitnami/kubectl:latest
       script: |
         #!/bin/sh
         echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"
-        cd $(workspaces.source.path)/apps/manifests/overlays/prod
+        echo $(workspaces.source.path)
+        cd $(workspaces.source.path)
+        cd gitops/apps/manifests/overlays/prod
+        ls -l
         kubectl apply -k .
