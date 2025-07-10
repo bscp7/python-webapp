@@ -14,13 +14,13 @@ spec:
         #!/bin/sh
         set -e
 
-        cd $(workspaces.source.path)
+        cd $(workspaces.source.path)/gitops
         echo "Current directory:"
         pwd
+        ls -l
 
         echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"
         cd apps/manifests/overlays/prod
-        ls -l
 
         echo "Contents of kustomization.yaml file(if exists):"
         cat kustomization.yaml || echo "kustomization.yaml not found!"

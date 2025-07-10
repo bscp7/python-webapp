@@ -22,17 +22,24 @@ spec:
         cp $(workspaces.ssh-directory.path)/id_rsa ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+        export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+
+        cd $(workspaces.source.path)/gitops
+        ls -la
+
+        if [ ! -d .git ]; then
+          echo "Not in a Git repo!"
+          exit 1
+        fi
+        
         KUSTOMIZATION_FILE_PATH=apps/manifests/overlays/prod/kustomization.yaml
 
-        cd $(workspaces.source.path)
-        ls -l
-        git clone --branch $(params.branch) $(params.gitops-repo-url) gitops
-
         echo "Checking base directory:"
-        ls -l $(workspaces.source.path)/apps/manifests/base
+        ls -l $(workspaces.source.path)/gitops/apps/manifests/base
 
         echo "Contents of base kustomization.yaml:"
-        cat $(workspaces.source.path)/apps/manifests/base/kustomization.yaml || echo "Missing base kustomization.yaml"
+        cat $(workspaces.source.path)/gitops/apps/manifests/base/kustomization.yaml || echo "Missing base kustomization.yaml"
 
         echo "$KUSTOMIZATION_FILE_PATH before change:"
         echo "--------------------------"
@@ -45,7 +52,6 @@ spec:
         echo "--------------------------"
         cat $KUSTOMIZATION_FILE_PATH
         
-        cd gitops
         git config user.name "Bhavesh Patel"
         git config user.email "bhavesh.scp@hotmail.com"
         git status

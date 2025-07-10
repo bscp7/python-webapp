@@ -13,7 +13,7 @@ spec:
     - name: repo-url
       value: https://github.com/bscp7/python-webapp.git
     - name: image-url
-      value: docker.io/bhaveshscp/python-image:latest
+      value: docker.io/bhaveshscp/python-image
     - name: gitops-repo-url
       value: https://github.com/bscp7/python-webapp.git
     - name: app-name

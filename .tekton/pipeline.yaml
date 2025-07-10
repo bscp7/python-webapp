@@ -19,6 +19,10 @@ spec:
       params:
         - name: url
           value: $(params.repo-url)
+        - name: revision
+          value: $(params.gitops-branch)
+        - name: subdirectory
+          value: gitops
       workspaces:
         - name: output
           workspace: shared-workspace
@@ -32,6 +36,8 @@ spec:
       params:
         - name: IMAGE
           value: $(params.image-url):$(tasks.clone-source.results.commit)
+        - name: CONTEXT
+          value: gitops
       workspaces:
         - name: source
           workspace: shared-workspace
