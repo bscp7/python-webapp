@@ -12,16 +12,18 @@ spec:
       image: bitnami/kubectl:latest
       script: |
         #!/bin/sh
-        
+        set -e
+
         cd $(workspaces.source.path)
+        echo "Current directory:"
         pwd
-        
+
         echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"
         cd apps/manifests/overlays/prod
         ls -l
 
-        echo "kustomization.yaml file contents:"
-        cat kustomization.yaml
+        echo "Contents of kustomization.yaml file(if exists):"
+        cat kustomization.yaml || echo "kustomization.yaml not found!"
 
-        echo "apply"
+        echo "Applying manifests with kubectl:"
         kubectl apply -k .
