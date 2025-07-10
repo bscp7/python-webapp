@@ -12,9 +12,10 @@ spec:
       image: bitnami/kubectl:latest
       script: |
         #!/bin/sh
-        echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"
-        echo $(workspaces.source.path)
+        
         cd $(workspaces.source.path)
-        cd gitops/apps/manifests/overlays/prod
+        pwd
+        echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"        
+        cd apps/manifests/overlays/prod
         ls -l
         kubectl apply -k .

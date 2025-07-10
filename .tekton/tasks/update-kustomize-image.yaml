@@ -22,29 +22,34 @@ spec:
         cp $(workspaces.ssh-directory.path)/id_rsa ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
+        KUSTOMIZATION_FILE_PATH=apps/manifests/overlays/prod/kustomization.yaml
 
         cd $(workspaces.source.path)
+        ls -l
         git clone --branch $(params.branch) $(params.gitops-repo-url) gitops
-        cd apps/manifests/overlays/prod
 
-        echo "kustomization.yaml before:"
+        echo "Listing base directory:"
+        ls -l $(workspaces.source.path)/apps/manifests/base
+
+        echo "$KUSTOMIZATION_FILE_PATH before change:"
         echo "--------------------------"
-        cat kustomization.yaml
+        cat $KUSTOMIZATION_FILE_PATH
 
         echo "updating image in kustomization.yaml"
-        sed -i "s|newTag:.*|newTag: $(echo $(params.image) | cut -d: -f2)|" kustomization.yaml
+        sed -i "s|newTag:.*|newTag: $(echo $(params.image) | cut -d: -f2)|" $KUSTOMIZATION_FILE_PATH
         
-        echo "kustomization.yaml after:"
+        echo "$KUSTOMIZATION_FILE_PATH after change:"
         echo "--------------------------"
-        cat kustomization.yaml
-
-        cd $(workspaces.source.path)
+        cat $KUSTOMIZATION_FILE_PATH
+        
+        cd gitops
         git config user.name "Bhavesh Patel"
         git config user.email "bhavesh.scp@hotmail.com"
+        git status
         if git diff --quiet; then
           echo "No changes to commit."
         else
-          git add kustomization.yaml
+          git add $KUSTOMIZATION_FILE_PATH
           git commit -m "update image to $(params.image)"
           git push origin $(params.branch)
         fi
