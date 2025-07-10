@@ -15,7 +15,13 @@ spec:
         
         cd $(workspaces.source.path)
         pwd
-        echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"        
+        
+        echo "Deploying using kustomize overlay: apps/manifests/overlays/prod"
         cd apps/manifests/overlays/prod
         ls -l
+
+        echo "kustomization.yaml file contents:"
+        cat kustomization.yaml
+
+        echo "apply"
         kubectl apply -k .

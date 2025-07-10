@@ -28,8 +28,11 @@ spec:
         ls -l
         git clone --branch $(params.branch) $(params.gitops-repo-url) gitops
 
-        echo "Listing base directory:"
+        echo "Checking base directory:"
         ls -l $(workspaces.source.path)/apps/manifests/base
+
+        echo "Contents of base kustomization.yaml:"
+        cat $(workspaces.source.path)/apps/manifests/base/kustomization.yaml || echo "Missing base kustomization.yaml"
 
         echo "$KUSTOMIZATION_FILE_PATH before change:"
         echo "--------------------------"
