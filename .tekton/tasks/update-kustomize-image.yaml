@@ -16,6 +16,7 @@ spec:
     - name: update
       image: docker.io/alpine/git:latest
       script: |
+        #!/bin/sh
         set -e
 
         mkdir -p ~/.ssh
@@ -25,6 +26,10 @@ spec:
 
         export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
 
+        echo "cd $(pwd)"
+        pwd
+        ls -la
+        echo "cd $(workspaces.source.path)/gitops"
         cd $(workspaces.source.path)/gitops
         ls -la
 
@@ -42,16 +47,18 @@ spec:
         cat $(workspaces.source.path)/gitops/apps/manifests/base/kustomization.yaml || echo "Missing base kustomization.yaml"
 
         echo "$KUSTOMIZATION_FILE_PATH before change:"
-        echo "--------------------------"
+        echo "-----------------------"
         cat $KUSTOMIZATION_FILE_PATH
 
         echo "updating image in kustomization.yaml"
         sed -i "s|newTag:.*|newTag: $(echo $(params.image) | cut -d: -f2)|" $KUSTOMIZATION_FILE_PATH
         
         echo "$KUSTOMIZATION_FILE_PATH after change:"
-        echo "--------------------------"
+        echo "-----------------------"
         cat $KUSTOMIZATION_FILE_PATH
         
+        echo $(pwd)
+        ls -la
         git config user.name "Bhavesh Patel"
         git config user.email "bhavesh.scp@hotmail.com"
         git status

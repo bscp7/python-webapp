@@ -23,6 +23,10 @@ spec:
           value: $(params.gitops-branch)
         - name: subdirectory
           value: gitops
+        - name: depth
+          value: "0" # full clone to preserve .git
+        - name: deleteExisting
+          value: "true"
       workspaces:
         - name: output
           workspace: shared-workspace
